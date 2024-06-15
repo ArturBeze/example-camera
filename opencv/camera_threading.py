@@ -122,6 +122,12 @@ def main():
 	frame_rate_calc = 1
 	freq = cv2.getTickFrequency()
 
+	# used to record the time when we processed last frame 
+	prev_frame_time = 0
+
+	# used to record the time at which we processed current frame 
+	new_frame_time = 0
+
 	# Initialize video stream
 	videostream = VideoStream().start()
 	time.sleep(1)
@@ -131,6 +137,15 @@ def main():
 
 		# Start timer (for calculating frame rate)
 		t1 = cv2.getTickCount()
+
+		# Calculating the fps 
+
+		# fps will be number of frame processed in given time frame 
+		# since their will be most of time error of 0.001 second 
+		# we will be subtracting it to get more accurate result 
+		new_frame_time = time.time() 
+		fps = 1/(new_frame_time-prev_frame_time) 
+		prev_frame_time = new_frame_time 
 
 		# Grab frame from video stream
 		cv2_im = videostream.read()
@@ -143,7 +158,8 @@ def main():
 		font = cv2.FONT_HERSHEY_SIMPLEX
 
 		#cv2.putText(image, text, org, font, fontScale, color[, thickness[, lineType[, bottomLeftOrigin]]])
-		cv2.putText(cv2_im, f"FPS: {frame_rate_calc:.2f}", (7, 70), font, 3, (100, 255, 0), 3, cv2.LINE_AA)
+		cv2.putText(cv2_im, f"FPS: {frame_rate_calc:>.2f}", (7, 70), font, 1, (100, 255, 0), 2, cv2.LINE_AA)
+		cv2.putText(cv2_im, f"FPS: {fps:>.2f}", (7, 110), font, 1, (100, 255, 0), 2, cv2.LINE_AA)
 
 		cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
 		cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
