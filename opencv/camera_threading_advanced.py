@@ -54,6 +54,7 @@ class VideoStream:
 		self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('M', 'J', 'P', 'G'))
 		self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
 		self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+		self.cap.set(cv2.CAP_PROP_FPS, 60)
 
 		# Read first frame from the stream
 		(self.ret, self.frame) = self.cap.read()
@@ -102,10 +103,13 @@ def main():
 
 	# Initialize video stream
 	videostream = VideoStream().start()
+	fr = videostream.cap.get(cv2.CAP_PROP_FPS)
 	time.sleep(1)
 
 	while videostream.cap.isOpened():
 	#while True:
+
+		start_t0 = time.time()
 
 		# Start timer (for calculating frame rate)
 		t1 = cv2.getTickCount()
@@ -120,7 +124,9 @@ def main():
 		prev_frame_time = new_frame_time 
 
 		# Grab frame from video stream
+		start_t1 = time.time()
 		cv2_im = videostream.read()
+		time_elapsed(start_t1, "camera capture")
 
 		if not videostream.ret:
 			break
@@ -128,11 +134,13 @@ def main():
 		font = cv2.FONT_HERSHEY_SIMPLEX
 
 		#cv2.putText(image, text, org, font, fontScale, color[, thickness[, lineType[, bottomLeftOrigin]]])
-		cv2.putText(cv2_im, f"FPS: {frame_rate_calc:>.2f}", (7, 70), font, 1, (100, 255, 0), 2, cv2.LINE_AA)
-		cv2.putText(cv2_im, f"FPS: {fps:>.2f}", (7, 110), font, 1, (100, 255, 0), 2, cv2.LINE_AA)
+		cv2.putText(cv2_im, f"FPS: {frame_rate_calc:>.2f} ({fr})", (7, 70), font, 1, (100, 255, 0), 2, cv2.LINE_AA)
+		cv2.putText(cv2_im, f"FPS: {fps:>.2f} ({fr})", (7, 110), font, 1, (100, 255, 0), 2, cv2.LINE_AA)
 
 		# All the results have been drawn on the frame, so it's time to display it.
+		start_t3 = time.time()
 		cv2.imshow('frame', cv2_im)
+		time_elapsed(start_t3, "preview")
 
 		# Calculate framerate
 		t2 = cv2.getTickCount()
@@ -143,11 +151,23 @@ def main():
 		if cv2.waitKey(1) == ord('q'):
 			break
 
+		time_elapsed(start_t0, "overall")
+
 	print("Hello world!")
 
 	# Clean up
 	cv2.destroyAllWindows()
 	videostream.stop()
+
+
+
+def time_elapsed(start_time, event):
+	time_now = time.time()
+	duration = (time_now - start_time) * 1000
+	duration=round(duration, 2)
+	print (">>> ", duration, " ms (" ,event, ")")
+
+
 
 if __name__ == "__main__":
 	main()

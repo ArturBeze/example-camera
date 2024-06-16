@@ -53,8 +53,11 @@ from pycoral.utils.dataset import read_label_file
 from pycoral.utils.edgetpu import make_interpreter
 from pycoral.utils.edgetpu import run_inference
 
+
+
 def main():
-	default_model_dir = "../all_models"
+	#default_model_dir = "../all_models"
+	default_model_dir = "all_models"
 	default_model = "mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite"
 	default_labels = "coco_labels.txt"
 
@@ -76,17 +79,12 @@ def main():
 	inference_size = input_size(interpreter)
 
 	cap = cv2.VideoCapture(args.camera_idx)
-	#cap = cv2.VideoCapture("../chaplin.mp4")
-
 	cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('M', 'J', 'P', 'G'))
-
-	cap.set(cv2.CAP_PROP_FPS, 30)
-	cv2_fps = cap.get(cv2.CAP_PROP_FPS)
-
-	width = 1280
-	height = 720
-	cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-	cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+	cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+	cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+	cap.set(cv2.CAP_PROP_FPS, 60)
+	
+	fr = cap.get(cv2.CAP_PROP_FPS)
 
 	prev_frame_time = 0
 	new_frame_time = 0
@@ -94,7 +92,9 @@ def main():
 	while cap.isOpened():
 	#while True:
 
+		start_t1 = time.time()
 		ret, frame = cap.read()
+		time_elapsed(start_t1, "camera capture")
 
 		if not ret:
 			break
@@ -104,15 +104,12 @@ def main():
 		font = cv2.FONT_HERSHEY_SIMPLEX
 
 		new_frame_time = time.time()
-
 		fps = 1 / (new_frame_time - prev_frame_time)
 		prev_frame_time = new_frame_time
-		
-		fps = int(fps)
-		fps = str(fps)
 
 		#cv2.putText(image, text, org, font, fontScale, color[, thickness[, lineType[, bottomLeftOrigin]]])
-		cv2.putText(cv2_im, f"{fps} ({cv2_fps})", (7, 70), font, 3, (100, 255, 0), 3, cv2.LINE_AA)
+		#cv2.putText(cv2_im, f"{fps} ({cv2_fps})", (7, 70), font, 3, (100, 255, 0), 3, cv2.LINE_AA)
+		cv2.putText(cv2_im, f"FPS: {fps:>.2f} ({fr})", (7, 70), font, 1, (100, 255, 0), 2, cv2.LINE_AA)
 
 		cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
 		cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
@@ -127,6 +124,8 @@ def main():
 
 	cap.release()
 	cv2.destroyAllWindows()
+
+
 
 def append_objs_to_img(cv2_im, inference_size, objs, labels):
 	#pass
@@ -145,6 +144,16 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels):
 		cv2_im = cv2.putText(cv2_im, label, (x0, y0 + 30), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
 
 	return cv2_im
+
+
+
+def time_elapsed(start_time, event):
+	time_now = time.time()
+	duration = (time_now - start_time) * 1000
+	duration=round(duration, 2)
+	print (">>> ", duration, " ms (" ,event, ")")
+
+
 
 if __name__ == "__main__":
 	main()
