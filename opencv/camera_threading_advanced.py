@@ -147,9 +147,11 @@ def main():
 		time1 = (t2-t1)/freq
 		frame_rate_calc= 1/time1
 
+		start_t2 = time.time()
 		# Press 'q' to quit
 		if cv2.waitKey(1) == ord('q'):
 			break
+		time_elapsed(start_t2, "problem")
 
 		time_elapsed(start_t0, "overall")
 
