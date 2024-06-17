@@ -155,8 +155,6 @@ def main():
 
 		time_elapsed(start_t0, "overall")
 
-	print("Hello world!")
-
 	# Clean up
 	cv2.destroyAllWindows()
 	videostream.stop()

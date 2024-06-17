@@ -108,7 +108,6 @@ def main():
 		prev_frame_time = new_frame_time
 
 		#cv2.putText(image, text, org, font, fontScale, color[, thickness[, lineType[, bottomLeftOrigin]]])
-		#cv2.putText(cv2_im, f"{fps} ({cv2_fps})", (7, 70), font, 3, (100, 255, 0), 3, cv2.LINE_AA)
 		cv2.putText(cv2_im, f"FPS: {fps:>.2f} ({fr})", (7, 70), font, 1, (100, 255, 0), 2, cv2.LINE_AA)
 
 		cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)

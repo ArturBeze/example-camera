@@ -60,7 +60,7 @@ class VideoStream:
 		self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('M', 'J', 'P', 'G'))
 		self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
 		self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
-		#self.cap.set(cv2.CAP_PROP_FPS, 60)
+		self.cap.set(cv2.CAP_PROP_FPS, 60)
 
 		# Read first frame from the stream
 		(self.ret, self.frame) = self.cap.read()
@@ -185,8 +185,6 @@ def main():
 		# Press 'q' to quit
 		if cv2.waitKey(1) == ord('q'):
 			break
-
-	print("Hello world!")
 
 	# Clean up
 	cv2.destroyAllWindows()
