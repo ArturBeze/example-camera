@@ -134,8 +134,8 @@ def main():
 		font = cv2.FONT_HERSHEY_SIMPLEX
 
 		#cv2.putText(image, text, org, font, fontScale, color[, thickness[, lineType[, bottomLeftOrigin]]])
-		cv2.putText(cv2_im, f"FPS: {frame_rate_calc:>.2f} ({fr})", (7, 70), font, 1, (100, 255, 0), 2, cv2.LINE_AA)
-		cv2.putText(cv2_im, f"FPS: {fps:>.2f} ({fr})", (7, 110), font, 1, (100, 255, 0), 2, cv2.LINE_AA)
+		cv2.putText(cv2_im, f"FPS1: {frame_rate_calc:>.2f} ({fr})", (7, 70), font, 1, (100, 255, 0), 2, cv2.LINE_AA)
+		cv2.putText(cv2_im, f"FPS2: {fps:>.2f} ({fr})", (7, 110), font, 1, (100, 255, 0), 2, cv2.LINE_AA)
 
 		# All the results have been drawn on the frame, so it's time to display it.
 		start_t3 = time.time()
