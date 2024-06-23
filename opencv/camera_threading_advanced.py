@@ -142,16 +142,16 @@ def main():
 		cv2.imshow('frame', cv2_im)
 		time_elapsed(start_t3, "preview")
 
-		# Calculate framerate
-		t2 = cv2.getTickCount()
-		time1 = (t2-t1)/freq
-		frame_rate_calc= 1/time1
-
 		start_t2 = time.time()
 		# Press 'q' to quit
 		if cv2.waitKey(1) == ord('q'):
 			break
 		time_elapsed(start_t2, "problem")
+
+		# Calculate framerate
+		t2 = cv2.getTickCount()
+		time1 = (t2-t1)/freq
+		frame_rate_calc= 1/time1
 
 		time_elapsed(start_t0, "overall")
 

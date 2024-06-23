@@ -177,14 +177,14 @@ def main():
 		# All the results have been drawn on the frame, so it's time to display it.
 		cv2.imshow('frame', cv2_im)
 
+		# Press 'q' to quit
+		if cv2.waitKey(1) == ord('q'):
+			break
+		
 		# Calculate framerate
 		t2 = cv2.getTickCount()
 		time1 = (t2-t1)/freq
 		frame_rate_calc= 1/time1
-
-		# Press 'q' to quit
-		if cv2.waitKey(1) == ord('q'):
-			break
 
 	# Clean up
 	cv2.destroyAllWindows()
